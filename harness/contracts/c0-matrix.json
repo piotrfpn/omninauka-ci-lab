@@ -1,0 +1,178 @@
+[
+  {
+    "id": "C0-01",
+    "purpose": "Runner identity",
+    "expected": "GitHub-hosted Linux x64 Ubuntu 24.04; expected repo/dispatch",
+    "evidence_mechanism": "RUNNER_ENVIRONMENT, os-release, GITHUB_REPOSITORY/event read with allowlisted output",
+    "sanitized_failure": "BLOCKED wrong identity",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-02",
+    "purpose": "Resources",
+    "expected": ">=4 CPU; proposed >=8 GiB available RAM; actual Docker/temp FS >=8 GiB before pulls, >=2 GiB after; >=100000 inodes",
+    "evidence_mechanism": "verify-resources.sh: statvfs bytes/inodes, proc memory, docker info filtered, system df",
+    "sanitized_failure": "RESOURCE_PRECHECK_FAILED",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-03",
+    "purpose": "Docker/Compose",
+    "expected": "Local Unix-socket Docker Engine/API and Compose compatible with CLI",
+    "evidence_mechanism": "Future docker version/API and compose version probes; Linux runtime NOT_TESTED",
+    "sanitized_failure": "DOCKER_COMPATIBILITY_UNVERIFIED",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-04",
+    "purpose": "Exact CLI",
+    "expected": "2.108.0; start help has network-id and reviewed aliases",
+    "evidence_mechanism": "Private capture version/help; compare supported flags; Windows help observed separately",
+    "sanitized_failure": "CLI_VERSION_OR_HELP",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-05",
+    "purpose": "Workspace isolation",
+    "expected": "Unique run-ID project under RUNNER_TEMP; four paths disjoint",
+    "evidence_mechanism": "prepare-local-config.sh + exclusive mkdir, owner marker, no symlinks",
+    "sanitized_failure": "WORKSPACE_OWNER_OR_OVERLAP",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-06",
+    "purpose": "Empty application scope",
+    "expected": "Migrations and seeds empty, both disabled",
+    "evidence_mechanism": "safe_workspace: config equality and directory iteration before start",
+    "sanitized_failure": "NONEMPTY_APPLICATION_SCOPE",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-07",
+    "purpose": "Images/resource inventory",
+    "expected": "Image IDs plus RepoDigests observed; no implicit digest approval",
+    "evidence_mechanism": "Future docker inspect of owned image IDs with field whitelist; compare reviewed next-run inventory; resource measurement",
+    "sanitized_failure": "IMAGES_UNOBSERVED",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-08",
+    "purpose": "Platform health",
+    "expected": "db/Auth/rest/storage/kong/mailpit/realtime retained; health checks succeed",
+    "evidence_mechanism": "Private CLI capture, owned container label discovery + State.Health only; no ignore-health-check",
+    "sanitized_failure": "PLATFORM_HEALTH_FAILED",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-09",
+    "purpose": "PG17",
+    "expected": "server_version_num /10000 =17; record exact minor",
+    "evidence_mechanism": "c0-readonly.sql C0-09; JSON assertion evaluator pending; strict offline c0_results.evaluate_jsonl, synthetic parser evidence only; runtime NOT_TESTED",
+    "sanitized_failure": "PG_MAJOR_MISMATCH",
+    "status": "NOT_TESTED",
+    "assertion_contract": "harness/contracts/c0-assertions.json"
+  },
+  {
+    "id": "C0-10",
+    "purpose": "Roles",
+    "expected": "All canonical required roles present; session/current postgres; role attributes reviewed",
+    "evidence_mechanism": "c0-readonly.sql C0-09/10; compare roles/inherit/bypass_rls and baseline expectations; strict offline c0_results.evaluate_jsonl, synthetic parser evidence only; runtime NOT_TESTED",
+    "sanitized_failure": "ROLE_PREREQUISITE_FAILED",
+    "status": "NOT_TESTED",
+    "assertion_contract": "harness/contracts/c0-assertions.json"
+  },
+  {
+    "id": "C0-11",
+    "purpose": "Platform schema",
+    "expected": "auth.users, storage.objects/buckets exist; ownership validated",
+    "evidence_mechanism": "c0-readonly.sql C0-11/12; expected auth/storage admin owners pending runtime observation; strict offline c0_results.evaluate_jsonl, synthetic parser evidence only; runtime NOT_TESTED",
+    "sanitized_failure": "PLATFORM_SCHEMA_FAILED",
+    "status": "NOT_TESTED",
+    "assertion_contract": "harness/contracts/c0-assertions.json"
+  },
+  {
+    "id": "C0-12",
+    "purpose": "Storage RLS",
+    "expected": "objects/buckets RLS true; forced-RLS/ownership recorded and reviewed",
+    "evidence_mechanism": "c0-readonly.sql C0-12; fail missing relation or disabled RLS; strict offline c0_results.evaluate_jsonl, synthetic parser evidence only; runtime NOT_TESTED",
+    "sanitized_failure": "STORAGE_RLS_FAILED",
+    "status": "NOT_TESTED",
+    "assertion_contract": "harness/contracts/c0-assertions.json"
+  },
+  {
+    "id": "C0-13",
+    "purpose": "Extensions",
+    "expected": "pgcrypto available; extensions schema and compatible existing location/owner",
+    "evidence_mechanism": "c0-readonly.sql C0-13/14; no extension creation; baseline expects pgcrypto in extensions; strict offline c0_results.evaluate_jsonl, synthetic parser evidence only; runtime NOT_TESTED",
+    "sanitized_failure": "EXTENSION_PREREQUISITE_FAILED",
+    "status": "NOT_TESTED",
+    "assertion_contract": "harness/contracts/c0-assertions.json"
+  },
+  {
+    "id": "C0-14",
+    "purpose": "pg_cron",
+    "expected": "available, preload includes pg_cron, cron.database_name matches postgres; existing schema/owner compatible",
+    "evidence_mechanism": "c0-readonly.sql C0-14; baseline expects pg_catalog; fail unresolved ownership/privileges; strict offline c0_results.evaluate_jsonl, synthetic parser evidence only; runtime NOT_TESTED",
+    "sanitized_failure": "CRON_PREREQUISITE_FAILED",
+    "status": "NOT_TESTED",
+    "assertion_contract": "harness/contracts/c0-assertions.json"
+  },
+  {
+    "id": "C0-15",
+    "purpose": "Realtime publication",
+    "expected": "supabase_realtime exists; owner and insert/update/delete/truncate flags reviewed",
+    "evidence_mechanism": "c0-readonly.sql C0-15; strict offline c0_results.evaluate_jsonl, synthetic parser evidence only; runtime NOT_TESTED",
+    "sanitized_failure": "PUBLICATION_PREREQUISITE_FAILED",
+    "status": "NOT_TESTED",
+    "assertion_contract": "harness/contracts/c0-assertions.json"
+  },
+  {
+    "id": "C0-16",
+    "purpose": "Local endpoints",
+    "expected": "Published host ports loopback-only; local DB/API/mail healthy",
+    "evidence_mechanism": "Future inspect NetworkSettings.Ports field-only + ss + allowlisted loopback probes; IPv6 checked",
+    "sanitized_failure": "NONLOCAL_ENDPOINT",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-17",
+    "purpose": "No application migrations",
+    "expected": "All 15 named application relations absent; no non-extension public routines or public relations; managed_child_private schema absent; migration schema absent, empty, or exactly one empty ordinary schema_migrations table. Missing/malformed/extra metadata or any applied row FAIL.",
+    "evidence_mechanism": "c0-readonly.sql C0-17; full public table inventory + future read-only ledger count if present; strict offline c0_results.evaluate_jsonl, synthetic parser evidence only; runtime NOT_TESTED",
+    "sanitized_failure": "APPLICATION_MIGRATION_SCOPE_VIOLATION",
+    "status": "NOT_TESTED",
+    "assertion_contract": "harness/contracts/c0-assertions.json"
+  },
+  {
+    "id": "C0-18",
+    "purpose": "Public output safety",
+    "expected": "No credential-bearing raw streams or env in logs/artifacts",
+    "evidence_mechanism": "Whitelist-only JSON/code; private 0700 dir +0600 output; future synthetic canary log scan",
+    "sanitized_failure": "CREDENTIAL_EXPOSURE",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-19",
+    "purpose": "Source immutable",
+    "expected": "Exact SHA/parent17 delta12 retained6policy and SQL raw hashes; Git clean",
+    "evidence_mechanism": "verify-safety.sh source before/after",
+    "sanitized_failure": "SOURCE_HASH_OR_DIRTY",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-20",
+    "purpose": "Cleanup ownership",
+    "expected": "Stop only owned services; restore approved networking; preserve public evidence",
+    "evidence_mechanism": "always() review gate on success/failure/cancel, runtime entry remains denied; no active Docker cleanup. Timeout/VM termination is containment, not completed cleanup proof.",
+    "sanitized_failure": "CLEANUP_NOT_VERIFIED",
+    "status": "NOT_TESTED"
+  },
+  {
+    "id": "C0-21",
+    "purpose": "Egress isolation",
+    "expected": "Positive controls then host+container IPv4/IPv6/DNS bypass denial with local success; control plane preserved",
+    "evidence_mechanism": "docs/C0_EGRESS_DESIGN.md; enforcement and proof NOT IMPLEMENTED",
+    "sanitized_failure": "EGRESS_UNVERIFIED",
+    "status": "NOT_EXECUTED"
+  }
+]

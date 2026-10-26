@@ -1,0 +1,141 @@
+{
+  "status": "UNAPPROVED_PROPOSAL_ONLY",
+  "expectedStateSource": "Derived only from immutable main and pre-candidate source snapshots, never candidate contents",
+  "main": "009206ec151f98bc7ddf323fb4aef36dfa4827c8",
+  "historical": "8be6234277633a529c06aa2459ab643bb9bee9ec",
+  "delta": {
+    "src/lib/auth-context.tsx": {
+      "mode": "utf8-lf",
+      "sha256": "ca7f8454e0bc3d41148ebb6fa3dc8cae12b3b8af8b3db3033bcdb0480945d066",
+      "origin": "P0.2 source snapshot ca7f8454e0bc3d41148ebb6fa3dc8cae12b3b8af8b3db3033bcdb0480945d066"
+    },
+    "src/pages/ForgotPasswordPage.tsx": {
+      "mode": "utf8-lf",
+      "sha256": "1d77ea3b4317d723cdbeae4c41e832a5f772234b42f8860b37a9aab03fb5810d",
+      "origin": "P0.2 source snapshot 1d77ea3b4317d723cdbeae4c41e832a5f772234b42f8860b37a9aab03fb5810d"
+    },
+    "src/pages/RegisterPage.tsx": {
+      "mode": "utf8-lf",
+      "sha256": "7d2897aeb9b2f27f12920853addecbba3901b84b04cd5b611f66c1f503e54558",
+      "origin": "P0.2 source snapshot 7d2897aeb9b2f27f12920853addecbba3901b84b04cd5b611f66c1f503e54558"
+    },
+    "src/lib/auth-errors.ts": {
+      "mode": "utf8-lf",
+      "sha256": "c9304ac1c3a231f5e892c459ca56f6b9cfbb9658164dbf670a76d2c650083380",
+      "origin": "P0.2 source snapshot c9304ac1c3a231f5e892c459ca56f6b9cfbb9658164dbf670a76d2c650083380"
+    },
+    "tests/p02-auth-errors.test.mjs": {
+      "mode": "utf8-lf",
+      "sha256": "0356e5d555070125db2b561bb0645ac601deeef55495e5bf3424f8b264597072",
+      "origin": "P0.2 source snapshot f312db0fd2e4e63b71f35f48d61824a563513082d2d390ebb6f88c16537e58be"
+    },
+    "docs/database/AUTH_U13_3A_MANAGED_IDENTITY_FOUNDATION.md": {
+      "mode": "utf8-lf",
+      "sha256": "b10b5b35c29188b2bc06ef0d5fd7da0a53deaa882931d874daf2969f2e3cc805",
+      "origin": "Under-13 source snapshot b10b5b35c29188b2bc06ef0d5fd7da0a53deaa882931d874daf2969f2e3cc805"
+    },
+    "supabase/functions/_shared/managed-child-identity.ts": {
+      "mode": "utf8-lf",
+      "sha256": "4f6537e6d510c7eb5675bfb458a892b4f344ad7ddf768714d60d56e04438338b",
+      "origin": "Under-13 source snapshot 4f6537e6d510c7eb5675bfb458a892b4f344ad7ddf768714d60d56e04438338b"
+    },
+    "supabase/migrations/20261020204341_auth_u13_managed_identity_foundation.sql": {
+      "mode": "raw-bytes",
+      "sha256": "3a744ee57fba8d7c446eb7f286566eb91480fcc3f155025e2d5b5b74863c77e2",
+      "origin": "Under-13 source snapshot 3a744ee57fba8d7c446eb7f286566eb91480fcc3f155025e2d5b5b74863c77e2"
+    },
+    "tests/managed-child-identity.test.mjs": {
+      "mode": "utf8-lf",
+      "sha256": "07c084a256e2bf10950d7ed6a6f8e6bc42cae1e9665815a47d478e8cb28ac1ba",
+      "origin": "Under-13 source snapshot 07c084a256e2bf10950d7ed6a6f8e6bc42cae1e9665815a47d478e8cb28ac1ba"
+    },
+    "tests/helpers/migration-provenance.mjs": {
+      "mode": "utf8-lf",
+      "sha256": "13e3744e331a332f77c648ba7e2ca01665a81e34dee24657504ada688c5a409d",
+      "origin": "Under-13 source snapshot 83e82bca13325d160deda2be1ef2d74133f68fe4fa338c3c20f6b7b66e9a5d7d"
+    },
+    "tests/migration-baseline.test.mjs": {
+      "mode": "utf8-lf",
+      "sha256": "75e091cc73329a5a14ac5c73cac00e9eca2a62f915177285ba35b4628d0c4c8d",
+      "origin": "Under-13 source snapshot 0b890be9a8f6ecc3f8634c38c68e978bca46ea354acb1b41e487e542c6697c84"
+    },
+    "src/i18n/locales/pl/common.json": {
+      "mode": "utf8-lf",
+      "sha256": "cac78d70aa8e270118f128a88eba62887b89b1fd6a93109dc453b3eefa21e19c",
+      "origin": "Exact main text outside auth + captured P0.2 auth subtree"
+    },
+    "src/i18n/locales/en/common.json": {
+      "mode": "utf8-lf",
+      "sha256": "cfdbc122b51b93accfe960735d5f7ac520f214c4e1c57f3b884da539f96e3e51",
+      "origin": "Exact main text outside auth + captured P0.2 auth subtree"
+    },
+    "src/pages/LoginPage.tsx": {
+      "mode": "utf8-lf",
+      "sha256": "95b6601843e4664183b42b8e992c854225c9be6a11fca3aa0ad6e975743d10af",
+      "origin": "Main JSX + explicit P0.2 imports/ref/handler recipe"
+    }
+  },
+  "retainedReleasedPaths": {
+    "docs/USER_GUIDE_UNDER13_PARENT_FIRST_PL.md": {
+      "mode": "raw-bytes",
+      "sha256": "39515d15d401c9011d649014ec07943f2950d0b27c4b9e5dcb791ff50c036c5d",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "docs/USER_GUIDE_UNDER13_QUICK_PL.md": {
+      "mode": "raw-bytes",
+      "sha256": "122d9d1d71e485c163ba419c99ae8a36ba4d6514ed3f36a4c2d8d35c113c3239",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "docs/email/AUTH_EMAIL_01_RELEASE_BASELINE.md": {
+      "mode": "raw-bytes",
+      "sha256": "7fdb2169e33246d65791f3c27ed43c5d1d414f7ac72fcef7231c7997bae69b95",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "public/email/omninauka-confirm-signup-hero.jpg": {
+      "mode": "raw-bytes",
+      "sha256": "96f928d81e09519c120bb2caf5dcc166f240c0fc7cb5f9d6817451475c81ace4",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "src/App.tsx": {
+      "mode": "raw-bytes",
+      "sha256": "6ccda45d9f5d9820b42334006ed5e8566f625819646b7adbfd41ba46b8a5288e",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "src/lib/parent-guide-content.ts": {
+      "mode": "raw-bytes",
+      "sha256": "504e5ccb585c62b369fdbcbfbc4621409fcd67cb450825c5ebb35f56bb940a97",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "src/pages/HomePage.tsx": {
+      "mode": "raw-bytes",
+      "sha256": "4867cc162c4f074135b43b5251ce727c4fb1a4f81b6783f6239887a76acffd9b",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "src/pages/InstallPage.tsx": {
+      "mode": "raw-bytes",
+      "sha256": "0b5e3d762dcaf05f0b377ccf80d3dfb217f8aeae01536512422b7ff647bb2f82",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "src/pages/ParentGuidePage.tsx": {
+      "mode": "raw-bytes",
+      "sha256": "da9cf31bee5345a26861bda8d47de95f73cf7b841bf2e33ef7aea9dd5dfc3098",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "supabase/email-templates/confirm-signup.html": {
+      "mode": "raw-bytes",
+      "sha256": "37f92c1d0d6e34cadeb40cd0f9ceb539b83d38781ff314b720bac80bf1313f69",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "supabase/email-templates/confirm-signup.subject.txt": {
+      "mode": "raw-bytes",
+      "sha256": "1da0b495737614ad0568f2e16afe3271b74855b461452e1b80340cbf1bd210fa",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    },
+    "vite.config.ts": {
+      "mode": "raw-bytes",
+      "sha256": "827ce95ff4e36dc2623f4123f85b39734cf5fd6e94ba768b2b912f55a9315d6c",
+      "origin": "Immutable main 009206ec151f98bc7ddf323fb4aef36dfa4827c8"
+    }
+  },
+  "scope": "Exact tracked/untracked delta only; all other tracked paths retain main; migration archive ledger independently pinned"
+}

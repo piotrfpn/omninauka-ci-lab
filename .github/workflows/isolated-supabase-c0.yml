@@ -1,0 +1,106 @@
+name: Isolated Supabase C0 — review candidate, runtime BLOCKED
+'on':
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: isolated-c0-controller
+  cancel-in-progress: false
+jobs:
+  c0:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash --noprofile --norc -euo pipefail {0}
+    env:
+      CONTROLLER_DIR: ${{ github.workspace }}/controller
+      CANDIDATE_DIR: ${{ github.workspace }}/candidate
+      LOCAL_SUPABASE_DIR: ${{ runner.temp }}/omni-c0-${{ github.run_id }}-${{ github.run_attempt }}
+      ARTIFACT_DIR: ${{ runner.temp }}/omni-c0-public-${{ github.run_id }}-${{ github.run_attempt }}
+      APPROVED_CONTROLLER_SHA: ${{ vars.C0_APPROVED_CONTROLLER_SHA }}
+      APPROVED_WORKFLOW_SHA: ${{ vars.C0_APPROVED_WORKFLOW_SHA }}
+      EXECUTED_WORKFLOW_SHA: ${{ github.workflow_sha }}
+      REF_PROTECTED: ${{ github.ref_protected }}
+    steps:
+      - id: bootstrap
+        name: External approval and protected default-ref check BEFORE checkout
+        run: |
+          set -euo pipefail
+          umask 077
+          [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]
+          [[ "$GITHUB_REPOSITORY" == "piotrfpn/omninauka-ci-lab" ]]
+          [[ "$GITHUB_REF" == "refs/heads/main" ]]
+          [[ "$APPROVED_CONTROLLER_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$APPROVED_WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$GITHUB_SHA" == "$APPROVED_CONTROLLER_SHA" ]]
+          [[ "$EXECUTED_WORKFLOW_SHA" == "$APPROVED_WORKFLOW_SHA" ]]
+          [[ "$REF_PROTECTED" == "true" ]]
+      - name: Preserve bytes BEFORE either checkout
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - name: Checkout controller at selected dispatch ref
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          path: controller
+          ref: ${{ vars.C0_APPROVED_CONTROLLER_SHA }}
+          persist-credentials: false
+          clean: false
+      - id: controller_trust
+        name: Controller revision approval — currently UNAPPROVED and blocked
+        run: bash controller/harness/verify-safety.sh controller
+      - id: static
+        name: Static controller policy
+        run: bash controller/harness/validate-static.sh
+      - id: blocked
+        name: P0.3E.2 hard execution gate — expected BLOCKED
+        run: bash controller/harness/verify-safety.sh authorize
+      - id: shellcheck
+        name: Mandatory GitHub ShellCheck gate — missing tool FAILS
+        run: bash controller/harness/verify-safety.sh shellcheck
+      - id: actionlint
+        name: Mandatory verified actionlint 1.7.7 gate
+        run: bash controller/harness/verify-safety.sh actionlint
+      - id: candidate
+        name: Immutable source checkout — unreachable in P0.3E.2
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          repository: piotrfpn/omninauka-mvp
+          ref: bdbb31ef00a2d35bd63cce3f6c8c24f401f67fce
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+          clean: false
+      - name: Verify reviewed candidate content
+        run: bash controller/harness/verify-safety.sh source
+      - id: node
+        name: Node toolchain — unreachable in P0.3E.2
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24.13.0
+      - id: cli
+        name: Exact CLI — unreachable in P0.3E.2
+        uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359
+        with:
+          version: 2.108.0
+      - name: Fresh standalone config
+        run: bash controller/harness/prepare-local-config.sh
+      - name: Pre-pull resource gate
+        run: bash controller/harness/verify-resources.sh before
+      - id: network
+        name: Owned internal bridge — GitHub future only
+        run: bash controller/harness/verify-safety.sh network
+      - name: Platform startup adapter — blocked pending egress implementation
+        run: bash controller/harness/start-platform.sh
+      - name: Post-start resource gate
+        run: bash controller/harness/verify-resources.sh after
+      - name: Read-only C0 adapter — blocked pending ownership proof
+        run: bash controller/harness/verify-c0.sh
+      - name: Verify source stayed immutable
+        run: bash controller/harness/verify-safety.sh source
+      - name: Owned cleanup review gate
+        if: ${{ always() }}
+        env:
+          JOB_RESULT: ${{ job.status }}
+        run: bash controller/harness/verify-cleanup.sh

@@ -1,0 +1,49 @@
+{
+  "status": "PENDING INDEPENDENT REVIEW",
+  "scope": "SQL prerequisites only; not C0 runtime, cleanup or egress approval",
+  "source_commit": "bdbb31ef00a2d35bd63cce3f6c8c24f401f67fce",
+  "role_attributes": ["superuser", "inherit", "create_role", "create_db", "login", "bypass_rls"],
+  "role_constraints": {
+    "postgres": {"login": true, "create_role": true, "create_db": true},
+    "anon": {"superuser": false, "bypass_rls": false, "create_role": false, "create_db": false, "login": false},
+    "authenticated": {"superuser": false, "bypass_rls": false, "create_role": false, "create_db": false, "login": false},
+    "service_role": {"superuser": false, "bypass_rls": true, "create_role": false, "create_db": false, "login": false},
+    "supabase_admin": {"login": true},
+    "dashboard_user": {"superuser": false, "create_role": false, "create_db": false},
+    "pg_database_owner": {"superuser": false, "create_role": false, "create_db": false, "login": false, "bypass_rls": false},
+    "supabase_auth_admin": {"superuser": false, "create_role": false, "create_db": false, "login": true},
+    "supabase_storage_admin": {"superuser": false, "create_role": false, "create_db": false, "login": true},
+    "authenticator": {"superuser": false, "create_role": false, "create_db": false, "login": true, "inherit": false, "bypass_rls": false}
+  },
+  "attribute_policy": "Every listed attribute must be a JSON boolean. Constraints are required minima; unlisted attributes on a role explicitly allow either boolean and are recorded, not silently pinned to guessed platform values. Image/role profile runtime approval remains blocked.",
+  "schema_owners": {"auth": "supabase_auth_admin", "storage": "supabase_storage_admin", "public": "pg_database_owner", "extensions": "postgres"},
+  "optional_schema_owners": {"cron": "postgres"},
+  "relations": [
+    {"schema": "auth", "name": "users", "owner": "supabase_auth_admin", "rls": true, "force_rls": false},
+    {"schema": "storage", "name": "objects", "owner": "supabase_storage_admin", "rls": true, "force_rls": false},
+    {"schema": "storage", "name": "buckets", "owner": "supabase_storage_admin", "rls": true, "force_rls": false}
+  ],
+  "required_extensions": ["pgcrypto", "pg_cron"],
+  "optional_extensions": ["pgtap"],
+  "installed_extension_schemas": {"pgcrypto": "extensions", "pg_cron": "pg_catalog", "pgtap": "extensions"},
+  "installed_extension_owners": ["postgres"],
+  "allowed_preload_libraries": ["pg_cron", "pg_stat_statements", "pgaudit", "pgsodium", "pg_net", "pg_plan_filter", "supautils", "timescaledb", "auto_explain"],
+  "required_preload_libraries": ["pg_cron"],
+  "database": "postgres",
+  "publication": {"name": "supabase_realtime", "owner": "postgres", "all_tables": false, "insert": true, "update": true, "delete": true, "truncate": true, "tables": []},
+  "application_tables": [
+    "public.admin_plan_actions", "public.child_profiles", "public.folders", "public.parental_consents", "public.payment_events", "public.profiles", "public.session_images", "public.study_sessions", "public.support_tickets", "public.tutor_messages", "public.tutor_threads", "public.under13_parent_notifications", "public.usage_events", "managed_child_private.identities", "managed_child_private.operations"
+  ],
+  "application_inventory_provenance": "13 CREATE TABLE public entries in immutable canonical baseline plus two managed_child_private tables in immutable foundation SQL; no candidate hash regenerated",
+  "public_relations": [],
+  "public_routines": [],
+  "managed_schema_absent": true,
+  "migration_schema": "supabase_migrations",
+  "migration_relation": "supabase_migrations.schema_migrations",
+  "migration_rows": 0,
+  "migration_states": ["schema_absent", "schema_empty", "empty_history_table"],
+  "unknown_or_missing_fields": "FAIL",
+  "runtime": "NOT_TESTED",
+  "cleanup": "NOT_TESTED",
+  "egress": "NOT_EXECUTED"
+}

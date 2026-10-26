@@ -1,0 +1,89 @@
+{
+  "status": "PLAN ONLY - NOT APPLIED",
+  "source_commit": "bdbb31ef00a2d35bd63cce3f6c8c24f401f67fce",
+  "provenance": "Raw immutable Git blobs, not working tree contents",
+  "active": [
+    {
+      "path": "supabase/migrations/20260427170350_history_anchor.sql",
+      "raw_sha256": "30fa49cc7b86cdeb3d287453f12f51fa68eee98b0fb133b65219c8f4036e99d2",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20260427170359_history_anchor.sql",
+      "raw_sha256": "3e5027787cf53771322ebef3b3987652f2be1dfc8cfc6548670911b3ae12db43",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20260428183903_history_anchor.sql",
+      "raw_sha256": "6508cd865509064262e08e4e95eab0aa0ec23808179bd5a1ab75243b4af835b0",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20260428202546_history_anchor.sql",
+      "raw_sha256": "0df9dfb8a6fa39e630e1d5ef1c2c2a62a26f7674cd0dfae5d6d7fd1cb208ce64",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20260502113939_history_anchor.sql",
+      "raw_sha256": "15b07945e0a1929adb0c200ecd26a2f3367d3191e8a2002ebdcb44a85b7d41bc",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20260502114959_history_anchor.sql",
+      "raw_sha256": "29f453770a748b8f49cff47199613b02bd238b3c6bb0e43e4f7b6b2b585d4f9b",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20260502120308_history_anchor.sql",
+      "raw_sha256": "d531e4bfa81ae8761d240837bc517fb7e06821b61e8d4aeb6d0b2e5b03cb4777",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20260502182210_history_anchor.sql",
+      "raw_sha256": "102065393d94f670e1602954e90e4f04028fe19ee2a50902439c3f76972af3eb",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20260509100602_history_anchor.sql",
+      "raw_sha256": "c27a7655eb35ba8223ef76d8605c62f7014807a86d0da7f0da7338e8d8cf0369",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20260509142243_history_anchor.sql",
+      "raw_sha256": "2495ef4fbf202dae6f7ce667979b099b91f55e58c38d30e57b10cb4db76bb615",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20260510183007_history_anchor.sql",
+      "raw_sha256": "1a2498ff0072fa0baa59c4c676369cae2a9528d4b2cb4e21f0b83580cf2f7563",
+      "kind": "comment-history-anchor"
+    },
+    {
+      "path": "supabase/migrations/20261010073638_canonical_baseline.sql",
+      "raw_sha256": "79efe5bca95dc55dc5e07766451ced1f1043834b2e5ae745054ca1ff22838c4f",
+      "kind": "executable"
+    },
+    {
+      "path": "supabase/migrations/20261010073843_priv02_soft_deleted_session_access.sql",
+      "raw_sha256": "2ae56530f39de18c6db4543e324fa318a4d96424d96a24ece158aee5ffaf9af9",
+      "kind": "executable"
+    },
+    {
+      "path": "supabase/migrations/20261010131220_priv02_session_deletion_barrier.sql",
+      "raw_sha256": "0df601b3581d77b38591f17e3895f43140e0d9cb1967e4fcff4f069ff9aeadc2",
+      "kind": "executable"
+    },
+    {
+      "path": "supabase/migrations/20261010174000_priv02_legacy_storage_owner.sql",
+      "raw_sha256": "688daa494c6ef01658bd6b40b9651061c9057da62eff4e06d5e3ff77fa1263b9",
+      "kind": "executable"
+    },
+    {
+      "path": "supabase/migrations/20261020204341_auth_u13_managed_identity_foundation.sql",
+      "raw_sha256": "3a744ee57fba8d7c446eb7f286566eb91480fcc3f155025e2d5b5b74863c77e2",
+      "kind": "executable"
+    }
+  ],
+  "archive_sql_count": 42,
+  "archive_rule": "NEVER REPLAY"
+}

@@ -1,0 +1,76 @@
+name: Static controller preflight — NO runtime
+'on':
+  workflow_dispatch: null
+permissions:
+  contents: read
+concurrency:
+  group: static-controller-preflight
+  cancel-in-progress: false
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash --noprofile --norc -euo pipefail {0}
+    env:
+      STATIC_PREFLIGHT_APPROVED_CONTROLLER_SHA: ${{ vars.STATIC_PREFLIGHT_APPROVED_CONTROLLER_SHA }}
+      STATIC_PREFLIGHT_APPROVED_WORKFLOW_SHA: ${{ vars.STATIC_PREFLIGHT_APPROVED_WORKFLOW_SHA }}
+      STATIC_PYTHON_VERSION: ${{ vars.STATIC_PYTHON_VERSION }}
+      STATIC_PYTHON_SHA256: ${{ vars.STATIC_PYTHON_SHA256 }}
+      STATIC_RUBY_VERSION: ${{ vars.STATIC_RUBY_VERSION }}
+      STATIC_RUBY_SHA256: ${{ vars.STATIC_RUBY_SHA256 }}
+      STATIC_SHELLCHECK_VERSION: ${{ vars.STATIC_SHELLCHECK_VERSION }}
+      STATIC_SHELLCHECK_SHA256: ${{ vars.STATIC_SHELLCHECK_SHA256 }}
+      EXECUTED_WORKFLOW_SHA: ${{ github.workflow_sha }}
+      REF_PROTECTED: ${{ github.ref_protected }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONPATH: ''
+      PYTHONHOME: ''
+      BASH_ENV: ''
+      ENV: ''
+      RUBYOPT: ''
+      RUBYLIB: ''
+      OMNI_YAML_MODULE: ''
+    steps:
+      - id: bootstrap
+        name: External STATIC approval and tool integrity BEFORE checkout
+        run: |
+          set -euo pipefail
+          umask 077
+          [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]
+          [[ "$GITHUB_REPOSITORY" == "piotrfpn/omninauka-ci-lab" ]]
+          [[ "$GITHUB_REF" == "refs/heads/main" ]]
+          [[ "$GITHUB_WORKFLOW_REF" == "piotrfpn/omninauka-ci-lab/.github/workflows/static-controller-preflight.yml@refs/heads/main" ]]
+          [[ "$STATIC_PREFLIGHT_APPROVED_CONTROLLER_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$STATIC_PREFLIGHT_APPROVED_WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$GITHUB_SHA" == "$STATIC_PREFLIGHT_APPROVED_CONTROLLER_SHA" ]]
+          [[ "$EXECUTED_WORKFLOW_SHA" == "$STATIC_PREFLIGHT_APPROVED_WORKFLOW_SHA" ]]
+          [[ "$REF_PROTECTED" == "true" ]]
+          [[ "$RUNNER_ENVIRONMENT" == "github-hosted" && "$RUNNER_OS" == "Linux" && "$RUNNER_ARCH" == "X64" ]]
+          # shellcheck source=/dev/null
+          . /etc/os-release
+          [[ "$ID" == "ubuntu" && "$VERSION_ID" == "24.04" ]]
+          for tool in PYTHON RUBY SHELLCHECK; do
+            version_key="STATIC_${tool}_VERSION"
+            hash_key="STATIC_${tool}_SHA256"
+            [[ "${!version_key}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+            [[ "${!hash_key}" =~ ^[0-9a-f]{64}$ ]]
+            binary="${tool,,}"
+            if [[ "$tool" == "PYTHON" ]]; then binary=python3; fi
+            actual="$(sha256sum "/usr/bin/$binary")"
+            [[ "${actual%% *}" == "${!hash_key}" ]]
+          done
+      - name: Preserve source bytes
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - name: Checkout independently approved controller only
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          path: controller
+          ref: ${{ vars.STATIC_PREFLIGHT_APPROVED_CONTROLLER_SHA }}
+          persist-credentials: false
+          clean: false
+      - name: Mandatory static lint, tests and policy — no runtime
+        run: /usr/bin/python3 -B controller/harness/static_preflight.py

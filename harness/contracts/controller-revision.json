@@ -1,0 +1,16 @@
+{
+  "status": "PENDING INDEPENDENT REVIEW",
+  "repository": "piotrfpn/omninauka-ci-lab",
+  "approval_state": "UNAPPROVED",
+  "approved_revision": null,
+  "trust_anchor": "Future out-of-band independent approval, enforced by a protected trusted workflow/bootstrap before executing controller code; never an arbitrary dispatch ref or dynamically generated self-manifest",
+  "execution": "BLOCKED",
+  "external_anchor": {
+    "controller_variable": "C0_APPROVED_CONTROLLER_SHA",
+    "workflow_variable": "C0_APPROVED_WORKFLOW_SHA",
+    "owner": "independent trusted repository administrator; not dispatch input or workflow code",
+    "configured": false,
+    "default_ref": "refs/heads/main",
+    "repository_protection": "FUTURE PREREQUISITE; not configured in this sprint"
+  }
+}

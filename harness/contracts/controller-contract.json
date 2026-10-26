@@ -1,0 +1,100 @@
+{
+  "status": "PENDING INDEPENDENT REVIEW",
+  "candidate": "bdbb31ef00a2d35bd63cce3f6c8c24f401f67fce",
+  "main": "009206ec151f98bc7ddf323fb4aef36dfa4827c8",
+  "original_manifest_sha256": "2dc0e8c663f84a782cf68dc6414046bf225e40bf1fb3af53428794044f132c1e",
+  "policy_manifest_sha256": "6f05f88eab13adb97b41c4aa8417ec23e0833fed6627269b7d7fe89b0aba1d5d",
+  "execution_authorized": false,
+  "egress_status": "EGRESS_UNVERIFIED",
+  "cli": "2.108.0",
+  "node": "24.13.0",
+  "postgres_major": 17,
+  "excluded_services": [
+    "studio",
+    "analytics",
+    "vector",
+    "imgproxy"
+  ],
+  "resource_thresholds_proposed_not_measured": {
+    "before_bytes": 8589934592,
+    "after_bytes": 2147483648,
+    "available_inodes": 100000,
+    "minimum_cpu": 4,
+    "minimum_available_memory_bytes": 8589934592
+  },
+  "future_start_argv": [
+    "supabase",
+    "start",
+    "--workdir",
+    "OWNED_LOCAL_SUPABASE_DIR",
+    "--network-id",
+    "OWNED_DISCOVERED_NETWORK_ID",
+    "--exclude",
+    "studio,analytics,vector,imgproxy"
+  ],
+  "future_sql_argv": [
+    "docker",
+    "exec",
+    "-i",
+    "VERIFIED_OWNED_DB_CONTAINER",
+    "psql",
+    "-q",
+    "-X",
+    "-U",
+    "postgres",
+    "-d",
+    "postgres",
+    "-v",
+    "ON_ERROR_STOP=1",
+    "-tA"
+  ],
+  "runtime_adapters": "Prepared with mock ports; real IO independently hard-blocked. Images, live egress receipts, native-volume ownership and external trust require qualification.",
+  "docker_images": "NOT_OBSERVED_NOT_APPROVED",
+  "github_runtime": {
+    "status": "PENDING INDEPENDENT REVIEW",
+    "runner": "ubuntu-24.04",
+    "execution": "BLOCKED",
+    "network": "dedicated internal bridge; no fallback without independent review",
+    "external_trust_variables": [
+      "C0_APPROVED_CONTROLLER_SHA",
+      "C0_APPROVED_WORKFLOW_SHA"
+    ],
+    "default_ref": "refs/heads/main",
+    "shellcheck": {
+      "mandatory": true,
+      "severity": "style",
+      "scripts": "seven explicit reviewed scripts plus inline bootstrap"
+    },
+    "actionlint": {
+      "mandatory": true,
+      "version": "1.7.7",
+      "sha256": "023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757",
+      "url": "https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz",
+      "source_commit": "03d0035246f3e81f36aed592ffb4bebf33a03106",
+      "source_commit_signature": "unsigned",
+      "checksum_source": "official release checksum file via HTTPS; fixed archive hash; not reproduced build"
+    },
+    "executor_image": null,
+    "approved_images": null,
+    "probe_targets": null,
+    "cli_internal_cleanup_reviewed": false,
+    "native_volume_immutable_id": "not supplied by Docker volume inspect; no volume deletion approved",
+    "mandatory_results": [
+      "TRUST",
+      "LINT",
+      "RESOURCES",
+      "NETWORK",
+      "POSTGRESQL",
+      "SQL_ASSERTIONS",
+      "RUNTIME",
+      "CLEANUP"
+    ],
+    "stage_statuses": [
+      "DOCKER_LOCAL_NOT_AVAILABLE",
+      "GITHUB_RUNTIME_NOT_EXECUTED",
+      "EGRESS_NOT_VERIFIED",
+      "SQL_NOT_EXECUTED",
+      "CLEANUP_NOT_EXECUTED"
+    ]
+  }
+}

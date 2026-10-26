@@ -1,0 +1,82 @@
+{
+  "status": "PENDING INDEPENDENT REVIEW",
+  "pinnedMain": "009206ec151f98bc7ddf323fb4aef36dfa4827c8",
+  "originalP03BManifestSha256": "2dc0e8c663f84a782cf68dc6414046bf225e40bf1fb3af53428794044f132c1e",
+  "layers": {
+    "A": "Original reviewed runtime/source content; utf8-lf or raw bytes exactly as approved",
+    "B": "Explicit test-policy paths only; final hashes below are review evidence, never runtime expectations"
+  },
+  "changes": {
+    "tests/account-security.test.mjs": {
+      "mode": "raw-bytes",
+      "beforeSha256": "9c9e02b0a98a30544808e8e441bb5db2e3161c073d186a9a92fdd0e9a01e4905",
+      "afterSha256": "4f23fb84dba478a47ee9b807b6d77d5c00a153b980691d68e1b27729f81f6cc0"
+    },
+    "tests/helpers/migration-provenance.mjs": {
+      "mode": "raw-bytes",
+      "beforeSha256": "83e82bca13325d160deda2be1ef2d74133f68fe4fa338c3c20f6b7b66e9a5d7d",
+      "afterSha256": "d966a43d5c54549d921a7e6c5c8390d4e61c04b8108c3b5f49afddcb9cd7e024"
+    },
+    "tests/managed-child-identity.test.mjs": {
+      "mode": "raw-bytes",
+      "beforeSha256": "07c084a256e2bf10950d7ed6a6f8e6bc42cae1e9665815a47d478e8cb28ac1ba",
+      "afterSha256": "33a7ef95b973ffa46c81fd6516102d2f5a8880ce9bce6de598f412fe304886e9"
+    },
+    "tests/p02-auth-errors.test.mjs": {
+      "mode": "raw-bytes",
+      "beforeSha256": "f312db0fd2e4e63b71f35f48d61824a563513082d2d390ebb6f88c16537e58be",
+      "afterSha256": "94ec927b2f145892c9194ba04aa5c62dfde8bfbb4860d785f49aa605b435f635"
+    },
+    "tests/fixtures/p03b-reviewed-contract.json": {
+      "mode": "raw-bytes",
+      "beforeSha256": null,
+      "afterSha256": "19761f41976fa1eab60ed32cd030f94c91494a685a3205fb8ecba3a38946434a"
+    },
+    "tests/helpers/p03b-contract.mjs": {
+      "mode": "raw-bytes",
+      "beforeSha256": null,
+      "afterSha256": "1a674eeb46887b43ac868a79c007e220801932aeffc91dcd758baacf6b4a7c86"
+    }
+  },
+  "version": "P0.3D.1-PROPOSAL",
+  "previousPolicyManifestSha256": "99212e54fdfa0796b66c57b26893a25b18f07ac5a9b8e36a12d6f7d99f2eef72",
+  "testPolicyPaths": [
+    "tests/account-security.test.mjs",
+    "tests/managed-child-identity.test.mjs",
+    "tests/p02-auth-errors.test.mjs",
+    "tests/helpers/migration-provenance.mjs",
+    "tests/helpers/p03b-contract.mjs",
+    "tests/fixtures/p03b-reviewed-contract.json"
+  ],
+  "p03c1": {
+    "editedFiles": [
+      "tests/helpers/p03b-contract.mjs"
+    ],
+    "removedExemptions": [
+      "tests/priv01-parent-reminder.test.mjs",
+      "tests/priv01-under13-retention.test.mjs"
+    ],
+    "beforeHelperSha256": "bbeae78588f8d8ee5746f5a852ed666fc78010f1952a4b547347d2bebeae56bc",
+    "afterHelperSha256": "1a674eeb46887b43ac868a79c007e220801932aeffc91dcd758baacf6b4a7c86",
+    "patchAppliesToPreImplementationBytes": true
+  },
+  "p03d1": {
+    "editedFiles": [
+      "tests/account-security.test.mjs"
+    ],
+    "accountBeforeSha256": "73d1e7b98b90a2b415c6652ae3a9511ac24bb510498d60d30550dfdf566f6eb8",
+    "accountAfterSha256": "4f23fb84dba478a47ee9b807b6d77d5c00a153b980691d68e1b27729f81f6cc0",
+    "baseManifest": "p03c1-test-policy-PENDING-REVIEW.json",
+    "baseManifestSha256": "99212e54fdfa0796b66c57b26893a25b18f07ac5a9b8e36a12d6f7d99f2eef72",
+    "unchangedPolicyFiles": [
+      "tests/helpers/migration-provenance.mjs",
+      "tests/managed-child-identity.test.mjs",
+      "tests/p02-auth-errors.test.mjs",
+      "tests/fixtures/p03b-reviewed-contract.json",
+      "tests/helpers/p03b-contract.mjs"
+    ],
+    "patchSha256": "0fa2b52ceb3c96e2b8a0e37dacf8d623fd668e2a1b3ce9f3d9c15a290a4f1a36",
+    "securityDelta": "Verify pinned contract before admitting exactly reviewedManagedHelper; retain AST, trigger SQL and seven original paths",
+    "status": "PENDING INDEPENDENT REVIEW"
+  }
+}

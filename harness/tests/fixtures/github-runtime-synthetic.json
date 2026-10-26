@@ -1,0 +1,599 @@
+{
+  "state": {
+    "run": "123",
+    "attempt": "1",
+    "project": "omni-c0-123-1",
+    "started": "2026-10-24T00:00:00+00:00",
+    "local": "/runner-temp/omni-c0-123-1",
+    "ledger": [],
+    "postgres_image": "sha256:17e433f95accdfb7547ba91c09b5d6818e41da78f584aedf9a51ed9486f07547",
+    "db_id": "2222222222222222222222222222222222222222222222222222222222222222",
+    "executor_id": "3333333333333333333333333333333333333333333333333333333333333333",
+    "network_id": "1111111111111111111111111111111111111111111111111111111111111111",
+    "network_name": "omni-c0-123-1-net",
+    "cli_internal_cleanup_reviewed": true,
+    "image_profile": {
+      "origin": "SYNTHETIC",
+      "status": "SYNTHETIC_TEST_ONLY",
+      "cli": "2.108.0",
+      "roles": {
+        "db": {
+          "role": "db",
+          "create_reference": "fixture.invalid/db:synthetic",
+          "approved_repository_digest": "fixture.invalid/db@sha256:d20a053e07d358c0442c17ea3a4e22023e6eb4fd5d9987a8b0e6c40ec3df48ca",
+          "approved_platform_manifest_digest": "sha256:04cefd2d5c615f41286d77924d0d7468b1f032370c4883ee7219dc159b784327",
+          "approved_platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "approved_image_id": "sha256:17e433f95accdfb7547ba91c09b5d6818e41da78f584aedf9a51ed9486f07547",
+          "readiness": {
+            "mechanism": "docker_healthcheck",
+            "test": [
+              "CMD",
+              "pg_isready",
+              "-U",
+              "postgres",
+              "-h",
+              "127.0.0.1",
+              "-p",
+              "5432"
+            ],
+            "max_age_seconds": 60
+          }
+        },
+        "auth": {
+          "role": "auth",
+          "create_reference": "fixture.invalid/auth:synthetic",
+          "approved_repository_digest": "fixture.invalid/auth@sha256:bff1913263cdf75bfefd23aa95bd299d0722f7e2e1a76eb9875da4fb37a1bed0",
+          "approved_platform_manifest_digest": "sha256:b4758f541febffa34e87fc64208244fe7583c1b25153b704feac7b581cc00089",
+          "approved_platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "approved_image_id": "sha256:32aca2566c8dcdba009a179ad7aa761f2c57438ac0e1feade70cf4303b444d1f",
+          "readiness": {
+            "mechanism": "docker_healthcheck",
+            "test": [
+              "CMD",
+              "wget",
+              "--no-verbose",
+              "--tries=1",
+              "--spider",
+              "http://127.0.0.1:9999/health"
+            ],
+            "max_age_seconds": 60
+          }
+        },
+        "rest": {
+          "role": "rest",
+          "create_reference": "fixture.invalid/rest:synthetic",
+          "approved_repository_digest": "fixture.invalid/rest@sha256:2bd0a085927ab33840244201a44d7e6ffa9a1f56e3d8e09a294860fe5ee1184e",
+          "approved_platform_manifest_digest": "sha256:566f229ea7fccedce00fa512687c6a974d7f1a166150c0e5c654d3ef240927cb",
+          "approved_platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "approved_image_id": "sha256:90c35515d707188d7485ccfa41fc6ca182cf5b64a1df9decf02c01360b5bea72",
+          "readiness": {
+            "role": "rest",
+            "mechanism": "rest_head",
+            "method": "HEAD",
+            "path": "/rest-admin/v1/ready",
+            "status": 200,
+            "follow_redirects": false,
+            "timeout_seconds": 2,
+            "max_age_seconds": 10
+          }
+        },
+        "storage": {
+          "role": "storage",
+          "create_reference": "fixture.invalid/storage:synthetic",
+          "approved_repository_digest": "fixture.invalid/storage@sha256:8531208eed9363b76f005f253e83bf205fa6805b92aba3ae21e844c47cd291b7",
+          "approved_platform_manifest_digest": "sha256:fb11016c06424e952075df58f152a5dc17798048806cd0151305763b6805afb0",
+          "approved_platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "approved_image_id": "sha256:1f3f5c867bfef83df9ab2103ba8f2b63142aafdbd418dcefdbdfc33232998810",
+          "readiness": {
+            "mechanism": "docker_healthcheck",
+            "test": [
+              "CMD",
+              "wget",
+              "--no-verbose",
+              "--tries=1",
+              "--spider",
+              "http://127.0.0.1:5000/status"
+            ],
+            "max_age_seconds": 60
+          }
+        },
+        "kong": {
+          "role": "kong",
+          "create_reference": "fixture.invalid/kong:synthetic",
+          "approved_repository_digest": "fixture.invalid/kong@sha256:b35fdb0b54e6af3d3a3f9cd1d9e86980b90021374b74ba0c6ea951a6d9963ab4",
+          "approved_platform_manifest_digest": "sha256:83f696ab98e6eb55d0bc8a3222f25e40d7e20acdad4ca4e99b385c6620a8c37d",
+          "approved_platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "approved_image_id": "sha256:d2f8b8104186fd49c42d8eeda6ffb1c1243a08e93a37e5bc698f74823b30ccb3",
+          "readiness": {
+            "mechanism": "docker_healthcheck",
+            "test": [
+              "CMD-SHELL",
+              "kong health"
+            ],
+            "max_age_seconds": 60
+          }
+        },
+        "inbucket": {
+          "role": "inbucket",
+          "create_reference": "fixture.invalid/inbucket:synthetic",
+          "approved_repository_digest": "fixture.invalid/inbucket@sha256:de6fd0d0d4a888de20108df74156ae349039189539c1c67a2303e7a17f383c3a",
+          "approved_platform_manifest_digest": "sha256:8ddd0a9d5b8825b5c7e76b9aedabb65323904740da263fc89c0d2931a06de80c",
+          "approved_platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "approved_image_id": "sha256:8191b8c9437171e1d04d77dc94ec5ecf58615c8643f09598f7ca4affb43fc4b3",
+          "readiness": {
+            "mechanism": "docker_healthcheck",
+            "test": [
+              "CMD",
+              "/mailpit",
+              "readyz"
+            ],
+            "max_age_seconds": 60
+          }
+        },
+        "realtime": {
+          "role": "realtime",
+          "create_reference": "fixture.invalid/realtime:synthetic",
+          "approved_repository_digest": "fixture.invalid/realtime@sha256:faf74e1c61576b2e8675f6ca39a4a992693eedc2d70d5cdb6fa1176d593e027f",
+          "approved_platform_manifest_digest": "sha256:e0f1df9e431de545a528573bb60be82e617f507cecd098d3816b8af226b4ded4",
+          "approved_platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "approved_image_id": "sha256:6f7e1760f573d70ea05c53579db7d020870b68a85a4d3f070e972516e1ac5900",
+          "readiness": {
+            "mechanism": "docker_healthcheck",
+            "test": [
+              "CMD",
+              "curl",
+              "-sSfL",
+              "--head",
+              "-o",
+              "/dev/null",
+              "-H",
+              "Host:realtime-dev",
+              "http://127.0.0.1:4000/api/ping"
+            ],
+            "max_age_seconds": 60
+          }
+        },
+        "executor": {
+          "role": "executor",
+          "create_reference": "fixture.invalid/executor:synthetic",
+          "approved_repository_digest": "fixture.invalid/executor@sha256:87968d4eb15e38aee4d5f5952ffdc0e642f82a2e77d50d64385119e63eb07aa1",
+          "approved_platform_manifest_digest": "sha256:abad84b48eb1b216e26e6f67b59c54faef9a46b299e11a94b886bc1dadfb733d",
+          "approved_platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "approved_image_id": "sha256:03a7d28955d51bb508a732927daae4f49e762eb0d6ca28194b7212a218ac362c",
+          "readiness": {
+            "mechanism": "docker_healthcheck",
+            "test": [
+              "CMD",
+              "synthetic-executor-ready"
+            ],
+            "max_age_seconds": 60
+          }
+        }
+      },
+      "upstream_commit": "e26d9c86d2e81bce509b444e64d6e55a10314a4b"
+    },
+    "synthetic_now": "2026-10-24T00:00:06Z",
+    "image_selection": {
+      "origin": "SYNTHETIC",
+      "phase": "BEFORE_CREATE",
+      "mechanism": "SYNTHETIC_IMMUTABLE_SELECTION",
+      "images": {
+        "db": {
+          "Id": "sha256:17e433f95accdfb7547ba91c09b5d6818e41da78f584aedf9a51ed9486f07547",
+          "Os": "linux",
+          "Architecture": "amd64",
+          "RepoDigests": [
+            "fixture.invalid/db@sha256:d20a053e07d358c0442c17ea3a4e22023e6eb4fd5d9987a8b0e6c40ec3df48ca"
+          ],
+          "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"db\"}",
+          "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"db\"},\"config\":{\"digest\":\"sha256:17e433f95accdfb7547ba91c09b5d6818e41da78f584aedf9a51ed9486f07547\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":100},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+          "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:04cefd2d5c615f41286d77924d0d7468b1f032370c4883ee7219dc159b784327\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":287}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+        },
+        "auth": {
+          "Id": "sha256:32aca2566c8dcdba009a179ad7aa761f2c57438ac0e1feade70cf4303b444d1f",
+          "Os": "linux",
+          "Architecture": "amd64",
+          "RepoDigests": [
+            "fixture.invalid/auth@sha256:bff1913263cdf75bfefd23aa95bd299d0722f7e2e1a76eb9875da4fb37a1bed0"
+          ],
+          "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"auth\"}",
+          "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"auth\"},\"config\":{\"digest\":\"sha256:32aca2566c8dcdba009a179ad7aa761f2c57438ac0e1feade70cf4303b444d1f\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":102},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+          "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:b4758f541febffa34e87fc64208244fe7583c1b25153b704feac7b581cc00089\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":289}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+        },
+        "rest": {
+          "Id": "sha256:90c35515d707188d7485ccfa41fc6ca182cf5b64a1df9decf02c01360b5bea72",
+          "Os": "linux",
+          "Architecture": "amd64",
+          "RepoDigests": [
+            "fixture.invalid/rest@sha256:2bd0a085927ab33840244201a44d7e6ffa9a1f56e3d8e09a294860fe5ee1184e"
+          ],
+          "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"rest\"}",
+          "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"rest\"},\"config\":{\"digest\":\"sha256:90c35515d707188d7485ccfa41fc6ca182cf5b64a1df9decf02c01360b5bea72\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":102},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+          "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:566f229ea7fccedce00fa512687c6a974d7f1a166150c0e5c654d3ef240927cb\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":289}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+        },
+        "storage": {
+          "Id": "sha256:1f3f5c867bfef83df9ab2103ba8f2b63142aafdbd418dcefdbdfc33232998810",
+          "Os": "linux",
+          "Architecture": "amd64",
+          "RepoDigests": [
+            "fixture.invalid/storage@sha256:8531208eed9363b76f005f253e83bf205fa6805b92aba3ae21e844c47cd291b7"
+          ],
+          "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"storage\"}",
+          "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"storage\"},\"config\":{\"digest\":\"sha256:1f3f5c867bfef83df9ab2103ba8f2b63142aafdbd418dcefdbdfc33232998810\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":105},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+          "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:fb11016c06424e952075df58f152a5dc17798048806cd0151305763b6805afb0\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":292}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+        },
+        "kong": {
+          "Id": "sha256:d2f8b8104186fd49c42d8eeda6ffb1c1243a08e93a37e5bc698f74823b30ccb3",
+          "Os": "linux",
+          "Architecture": "amd64",
+          "RepoDigests": [
+            "fixture.invalid/kong@sha256:b35fdb0b54e6af3d3a3f9cd1d9e86980b90021374b74ba0c6ea951a6d9963ab4"
+          ],
+          "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"kong\"}",
+          "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"kong\"},\"config\":{\"digest\":\"sha256:d2f8b8104186fd49c42d8eeda6ffb1c1243a08e93a37e5bc698f74823b30ccb3\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":102},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+          "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:83f696ab98e6eb55d0bc8a3222f25e40d7e20acdad4ca4e99b385c6620a8c37d\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":289}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+        },
+        "inbucket": {
+          "Id": "sha256:8191b8c9437171e1d04d77dc94ec5ecf58615c8643f09598f7ca4affb43fc4b3",
+          "Os": "linux",
+          "Architecture": "amd64",
+          "RepoDigests": [
+            "fixture.invalid/inbucket@sha256:de6fd0d0d4a888de20108df74156ae349039189539c1c67a2303e7a17f383c3a"
+          ],
+          "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"inbucket\"}",
+          "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"inbucket\"},\"config\":{\"digest\":\"sha256:8191b8c9437171e1d04d77dc94ec5ecf58615c8643f09598f7ca4affb43fc4b3\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":106},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+          "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:8ddd0a9d5b8825b5c7e76b9aedabb65323904740da263fc89c0d2931a06de80c\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":293}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+        },
+        "realtime": {
+          "Id": "sha256:6f7e1760f573d70ea05c53579db7d020870b68a85a4d3f070e972516e1ac5900",
+          "Os": "linux",
+          "Architecture": "amd64",
+          "RepoDigests": [
+            "fixture.invalid/realtime@sha256:faf74e1c61576b2e8675f6ca39a4a992693eedc2d70d5cdb6fa1176d593e027f"
+          ],
+          "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"realtime\"}",
+          "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"realtime\"},\"config\":{\"digest\":\"sha256:6f7e1760f573d70ea05c53579db7d020870b68a85a4d3f070e972516e1ac5900\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":106},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+          "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:e0f1df9e431de545a528573bb60be82e617f507cecd098d3816b8af226b4ded4\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":293}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+        },
+        "executor": {
+          "Id": "sha256:03a7d28955d51bb508a732927daae4f49e762eb0d6ca28194b7212a218ac362c",
+          "Os": "linux",
+          "Architecture": "amd64",
+          "RepoDigests": [
+            "fixture.invalid/executor@sha256:87968d4eb15e38aee4d5f5952ffdc0e642f82a2e77d50d64385119e63eb07aa1"
+          ],
+          "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"executor\"}",
+          "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"executor\"},\"config\":{\"digest\":\"sha256:03a7d28955d51bb508a732927daae4f49e762eb0d6ca28194b7212a218ac362c\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":106},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+          "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:abad84b48eb1b216e26e6f67b59c54faef9a46b299e11a94b886bc1dadfb733d\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":293}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+        }
+      }
+    }
+  },
+  "network": {
+    "Id": "1111111111111111111111111111111111111111111111111111111111111111",
+    "Name": "omni-c0-123-1-net",
+    "Created": "2026-10-24T00:00:01Z",
+    "Driver": "bridge",
+    "Internal": true,
+    "EnableIPv6": false,
+    "Labels": {
+      "com.supabase.cli.project": "omni-c0-123-1",
+      "io.omninauka.c0.run": "omni-c0-123-1"
+    },
+    "Options": {
+      "com.docker.network.bridge.host_binding_ipv4": "127.0.0.1"
+    },
+    "IPAM": {
+      "Config": [
+        {
+          "Subnet": "192.0.2.0/24",
+          "Gateway": "192.0.2.1"
+        }
+      ]
+    },
+    "Containers": {}
+  },
+  "container": {
+    "Id": "2222222222222222222222222222222222222222222222222222222222222222",
+    "Name": "/supabase_db_omni-c0-123-1",
+    "Created": "2026-10-24T00:00:02Z",
+    "Image": "sha256:17e433f95accdfb7547ba91c09b5d6818e41da78f584aedf9a51ed9486f07547",
+    "Config": {
+      "Labels": {
+        "com.supabase.cli.project": "omni-c0-123-1",
+        "com.docker.compose.project": "omni-c0-123-1"
+      },
+      "Image": "fixture.invalid/db:synthetic",
+      "Healthcheck": {
+        "Test": [
+          "CMD",
+          "pg_isready",
+          "-U",
+          "postgres",
+          "-h",
+          "127.0.0.1",
+          "-p",
+          "5432"
+        ]
+      }
+    },
+    "HostConfig": {
+      "Privileged": false,
+      "PidMode": "",
+      "Devices": [],
+      "CapAdd": [],
+      "NetworkMode": "omni-c0-123-1-net"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "omni-c0-123-1-net": {
+          "NetworkID": "1111111111111111111111111111111111111111111111111111111111111111"
+        }
+      },
+      "Ports": {}
+    },
+    "Mounts": [],
+    "State": {
+      "Running": true,
+      "StartedAt": "2026-10-24T00:00:03Z",
+      "Health": {
+        "Status": "healthy",
+        "FailingStreak": 0,
+        "Log": [
+          {
+            "Start": "2026-10-24T00:00:04Z",
+            "End": "2026-10-24T00:00:05Z",
+            "ExitCode": 0
+          }
+        ]
+      }
+    },
+    "ImageEvidence": {
+      "Id": "sha256:17e433f95accdfb7547ba91c09b5d6818e41da78f584aedf9a51ed9486f07547",
+      "Os": "linux",
+      "Architecture": "amd64",
+      "RepoDigests": [
+        "fixture.invalid/db@sha256:d20a053e07d358c0442c17ea3a4e22023e6eb4fd5d9987a8b0e6c40ec3df48ca"
+      ],
+      "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"db\"}",
+      "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"db\"},\"config\":{\"digest\":\"sha256:17e433f95accdfb7547ba91c09b5d6818e41da78f584aedf9a51ed9486f07547\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":100},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+      "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:04cefd2d5c615f41286d77924d0d7468b1f032370c4883ee7219dc159b784327\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":287}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+    }
+  },
+  "resources": {
+    "origin": "SYNTHETIC",
+    "cpu": 4,
+    "memory_available": 12884901888,
+    "filesystems": {
+      "docker": {
+        "bytes": 10737418240,
+        "inodes": 100001
+      },
+      "runner_temp": {
+        "bytes": 10737418240,
+        "inodes": 100001
+      }
+    },
+    "driver": "overlay2",
+    "local_socket": true
+  },
+  "proof": {
+    "origin": "SYNTHETIC",
+    "executor_id": "3333333333333333333333333333333333333333333333333333333333333333",
+    "network_id": "1111111111111111111111111111111111111111111111111111111111111111",
+    "process_boundary": {
+      "netns": 5,
+      "container_netns": 5,
+      "host_netns": 1,
+      "socket_exposed": false,
+      "privileged": false
+    },
+    "probes": {
+      "ipv4_numeric": {
+        "before_success": true,
+        "after_success": false,
+        "exit": 7,
+        "classification": "POLICY_DENIED",
+        "witness": "verified_route_isolation"
+      },
+      "container_ipv4": {
+        "before_success": true,
+        "after_success": false,
+        "exit": 7,
+        "classification": "POLICY_DENIED",
+        "witness": "verified_route_isolation"
+      },
+      "dns": {
+        "before_success": true,
+        "after_success": false,
+        "exit": 7,
+        "classification": "POLICY_DENIED",
+        "witness": "verified_route_isolation"
+      },
+      "container_dns": {
+        "before_success": true,
+        "after_success": false,
+        "exit": 7,
+        "classification": "POLICY_DENIED",
+        "witness": "verified_route_isolation"
+      },
+      "host_gateway": {
+        "before_success": true,
+        "after_success": false,
+        "exit": 7,
+        "classification": "POLICY_DENIED",
+        "witness": "verified_route_isolation"
+      },
+      "network_mode_bypass": {
+        "before_success": true,
+        "after_success": false,
+        "exit": 7,
+        "classification": "POLICY_DENIED",
+        "witness": "verified_capability_rejection"
+      },
+      "postgresql": {
+        "after_success": true,
+        "exit": 0
+      },
+      "auth_api": {
+        "after_success": true,
+        "exit": 0
+      },
+      "mailpit": {
+        "after_success": true,
+        "exit": 0
+      },
+      "control_plane": {
+        "after_success": true,
+        "exit": 0
+      },
+      "ipv6": {
+        "disabled": true,
+        "routes": [],
+        "disable_witness": true
+      }
+    }
+  },
+  "images": {
+    "db": {
+      "Id": "sha256:17e433f95accdfb7547ba91c09b5d6818e41da78f584aedf9a51ed9486f07547",
+      "Os": "linux",
+      "Architecture": "amd64",
+      "RepoDigests": [
+        "fixture.invalid/db@sha256:d20a053e07d358c0442c17ea3a4e22023e6eb4fd5d9987a8b0e6c40ec3df48ca"
+      ],
+      "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"db\"}",
+      "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"db\"},\"config\":{\"digest\":\"sha256:17e433f95accdfb7547ba91c09b5d6818e41da78f584aedf9a51ed9486f07547\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":100},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+      "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:04cefd2d5c615f41286d77924d0d7468b1f032370c4883ee7219dc159b784327\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":287}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+    },
+    "auth": {
+      "Id": "sha256:32aca2566c8dcdba009a179ad7aa761f2c57438ac0e1feade70cf4303b444d1f",
+      "Os": "linux",
+      "Architecture": "amd64",
+      "RepoDigests": [
+        "fixture.invalid/auth@sha256:bff1913263cdf75bfefd23aa95bd299d0722f7e2e1a76eb9875da4fb37a1bed0"
+      ],
+      "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"auth\"}",
+      "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"auth\"},\"config\":{\"digest\":\"sha256:32aca2566c8dcdba009a179ad7aa761f2c57438ac0e1feade70cf4303b444d1f\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":102},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+      "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:b4758f541febffa34e87fc64208244fe7583c1b25153b704feac7b581cc00089\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":289}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+    },
+    "rest": {
+      "Id": "sha256:90c35515d707188d7485ccfa41fc6ca182cf5b64a1df9decf02c01360b5bea72",
+      "Os": "linux",
+      "Architecture": "amd64",
+      "RepoDigests": [
+        "fixture.invalid/rest@sha256:2bd0a085927ab33840244201a44d7e6ffa9a1f56e3d8e09a294860fe5ee1184e"
+      ],
+      "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"rest\"}",
+      "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"rest\"},\"config\":{\"digest\":\"sha256:90c35515d707188d7485ccfa41fc6ca182cf5b64a1df9decf02c01360b5bea72\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":102},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+      "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:566f229ea7fccedce00fa512687c6a974d7f1a166150c0e5c654d3ef240927cb\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":289}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+    },
+    "storage": {
+      "Id": "sha256:1f3f5c867bfef83df9ab2103ba8f2b63142aafdbd418dcefdbdfc33232998810",
+      "Os": "linux",
+      "Architecture": "amd64",
+      "RepoDigests": [
+        "fixture.invalid/storage@sha256:8531208eed9363b76f005f253e83bf205fa6805b92aba3ae21e844c47cd291b7"
+      ],
+      "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"storage\"}",
+      "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"storage\"},\"config\":{\"digest\":\"sha256:1f3f5c867bfef83df9ab2103ba8f2b63142aafdbd418dcefdbdfc33232998810\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":105},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+      "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:fb11016c06424e952075df58f152a5dc17798048806cd0151305763b6805afb0\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":292}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+    },
+    "kong": {
+      "Id": "sha256:d2f8b8104186fd49c42d8eeda6ffb1c1243a08e93a37e5bc698f74823b30ccb3",
+      "Os": "linux",
+      "Architecture": "amd64",
+      "RepoDigests": [
+        "fixture.invalid/kong@sha256:b35fdb0b54e6af3d3a3f9cd1d9e86980b90021374b74ba0c6ea951a6d9963ab4"
+      ],
+      "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"kong\"}",
+      "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"kong\"},\"config\":{\"digest\":\"sha256:d2f8b8104186fd49c42d8eeda6ffb1c1243a08e93a37e5bc698f74823b30ccb3\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":102},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+      "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:83f696ab98e6eb55d0bc8a3222f25e40d7e20acdad4ca4e99b385c6620a8c37d\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":289}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+    },
+    "inbucket": {
+      "Id": "sha256:8191b8c9437171e1d04d77dc94ec5ecf58615c8643f09598f7ca4affb43fc4b3",
+      "Os": "linux",
+      "Architecture": "amd64",
+      "RepoDigests": [
+        "fixture.invalid/inbucket@sha256:de6fd0d0d4a888de20108df74156ae349039189539c1c67a2303e7a17f383c3a"
+      ],
+      "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"inbucket\"}",
+      "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"inbucket\"},\"config\":{\"digest\":\"sha256:8191b8c9437171e1d04d77dc94ec5ecf58615c8643f09598f7ca4affb43fc4b3\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":106},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+      "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:8ddd0a9d5b8825b5c7e76b9aedabb65323904740da263fc89c0d2931a06de80c\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":293}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+    },
+    "realtime": {
+      "Id": "sha256:6f7e1760f573d70ea05c53579db7d020870b68a85a4d3f070e972516e1ac5900",
+      "Os": "linux",
+      "Architecture": "amd64",
+      "RepoDigests": [
+        "fixture.invalid/realtime@sha256:faf74e1c61576b2e8675f6ca39a4a992693eedc2d70d5cdb6fa1176d593e027f"
+      ],
+      "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"realtime\"}",
+      "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"realtime\"},\"config\":{\"digest\":\"sha256:6f7e1760f573d70ea05c53579db7d020870b68a85a4d3f070e972516e1ac5900\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":106},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+      "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:e0f1df9e431de545a528573bb60be82e617f507cecd098d3816b8af226b4ded4\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":293}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+    },
+    "executor": {
+      "Id": "sha256:03a7d28955d51bb508a732927daae4f49e762eb0d6ca28194b7212a218ac362c",
+      "Os": "linux",
+      "Architecture": "amd64",
+      "RepoDigests": [
+        "fixture.invalid/executor@sha256:87968d4eb15e38aee4d5f5952ffdc0e642f82a2e77d50d64385119e63eb07aa1"
+      ],
+      "ConfigBytes": "{\"architecture\":\"amd64\",\"os\":\"linux\",\"rootfs\":{\"diff_ids\":[],\"type\":\"layers\"},\"synthetic_role\":\"executor\"}",
+      "ManifestBytes": "{\"annotations\":{\"offline.fixture\":\"executor\"},\"config\":{\"digest\":\"sha256:03a7d28955d51bb508a732927daae4f49e762eb0d6ca28194b7212a218ac362c\",\"mediaType\":\"application/vnd.oci.image.config.v1+json\",\"size\":106},\"layers\":[],\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"schemaVersion\":2}",
+      "RepositoryManifestBytes": "{\"manifests\":[{\"digest\":\"sha256:abad84b48eb1b216e26e6f67b59c54faef9a46b299e11a94b886bc1dadfb733d\",\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"size\":293}],\"mediaType\":\"application/vnd.oci.image.index.v1+json\",\"schemaVersion\":2}"
+    }
+  },
+  "namespace": {
+    "origin": "SYNTHETIC",
+    "executor_id": "3333333333333333333333333333333333333333333333333333333333333333",
+    "network_id": "1111111111111111111111111111111111111111111111111111111111111111",
+    "netns": 5,
+    "container_netns": 5,
+    "host_netns": 1
+  },
+  "rest_response": {
+    "origin": "SYNTHETIC",
+    "method": "HEAD",
+    "path": "/rest-admin/v1/ready",
+    "status": 200,
+    "redirected": false,
+    "timed_out": false,
+    "project": "omni-c0-123-1",
+    "network_id": "1111111111111111111111111111111111111111111111111111111111111111",
+    "executor_id": "3333333333333333333333333333333333333333333333333333333333333333",
+    "gateway_id": "0000000000000000000000000000000000000000000000000000000000000008",
+    "rest_id": "0000000000000000000000000000000000000000000000000000000000000006",
+    "response_service_id": "0000000000000000000000000000000000000000000000000000000000000006",
+    "executor_image_id": "sha256:03a7d28955d51bb508a732927daae4f49e762eb0d6ca28194b7212a218ac362c",
+    "gateway_image_id": "sha256:d2f8b8104186fd49c42d8eeda6ffb1c1243a08e93a37e5bc698f74823b30ccb3",
+    "rest_image_id": "sha256:90c35515d707188d7485ccfa41fc6ca182cf5b64a1df9decf02c01360b5bea72",
+    "executor_netns": 5,
+    "started_at": "2026-10-24T00:00:04Z",
+    "completed_at": "2026-10-24T00:00:05Z"
+  }
+}
