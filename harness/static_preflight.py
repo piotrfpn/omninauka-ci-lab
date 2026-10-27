@@ -22,6 +22,8 @@ from github_runtime import ReadinessError, require
 
 REPOSITORY = 'piotrfpn/omninauka-ci-lab'
 WORKFLOW = '.github/workflows/static-controller-preflight.yml'
+DISCOVERY_WORKFLOW = '.github/workflows/static-toolchain-discovery.yml'
+LINT_WORKFLOWS = ('.github/workflows/isolated-supabase-c0.yml', WORKFLOW, DISCOVERY_WORKFLOW)
 CHECKOUT = 'actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803'
 TOOLS = {'PYTHON':'/usr/bin/python3','RUBY':'/usr/bin/ruby','SHELLCHECK':'/usr/bin/shellcheck'}
 BOOTSTRAP = r'''set -euo pipefail
@@ -143,6 +145,30 @@ def actionlint_bytes():
     return artifact_bytes(blob,ACTIONLINT_SHA)  # Fixed reviewed archive digest, before extraction/execution.
 
 
+def workflow_inlines(root):
+    from security import yaml_load
+    inlines = []
+    for workflow in LINT_WORKFLOWS:
+        for job in yaml_load(Path(root)/workflow)['jobs'].values():
+            for step in job['steps']:
+                if 'run' not in step:
+                    continue
+                script = step['run']
+                if workflow == DISCOVERY_WORKFLOW:
+                    # Preserve the workflow bytes. Annotate only the generated lint copy:
+                    # dpkg-query, not Bash, expands these literal package fields.
+                    literal = r'''metadata="$(/usr/bin/dpkg-query --show --showformat='${binary:Package}\t${Version}\t${Architecture}\t${db:Status-Status}\n' "$owner" 2>/dev/null)" || deny'''
+                    lines = script.splitlines(keepends=True)
+                    matches = [i for i,line in enumerate(lines) if line.strip() == literal]
+                    require(len(matches) == 1, 'STATIC_DISCOVERY_LINT_INPUT_CHANGED')
+                    index = matches[0]
+                    indent = lines[index][:len(lines[index])-len(lines[index].lstrip())]
+                    lines.insert(index, indent+'# shellcheck disable=SC2016\n')
+                    script = ''.join(lines)
+                inlines.append(script)
+    return inlines
+
+
 def command_plan(root, private, inlines):
     root, private = Path(root), Path(private)
     python = TOOLS['PYTHON']
@@ -151,7 +177,7 @@ def command_plan(root, private, inlines):
         'shellcheck':[TOOLS['SHELLCHECK'],'--norc','--shell=bash','--severity=style',
                       *[str(root/'harness'/name) for name in SCRIPTS],*[str(x) for x in inlines]],
         'actionlint':[str(private/'actionlint'),'-shellcheck=','-pyflakes=',
-                      str(root/'.github/workflows/isolated-supabase-c0.yml'),str(root/WORKFLOW)],
+                      *[str(root/workflow) for workflow in LINT_WORKFLOWS]],
         'python-tests':[python,'-B','-m','unittest','discover','-s','harness/tests','-p','test_*.py','-v'],
         'static-policy':[python,'-B','harness/security.py','static'],
         **{'bash-syntax-'+str(i):['/usr/bin/bash','--noprofile','--norc','-n',str(p)]
@@ -207,13 +233,10 @@ def main():
     require(not private.is_symlink(),'STATIC_PRIVATE_SCOPE_INVALID')
     private.mkdir(mode=0o700,exist_ok=False)
     inlines = []
-    for workflow in (root/'.github/workflows/isolated-supabase-c0.yml',root/WORKFLOW):
-        for job in yaml_load(workflow)['jobs'].values():
-            for step in job['steps']:
-                if 'run' in step:
-                    path = private/('inline-'+str(len(inlines))+'.sh')
-                    path.write_text('#!/usr/bin/env bash\n'+step['run']+'\n',encoding='utf-8')
-                    inlines.append(path)
+    for script in workflow_inlines(root):
+        path = private/('inline-'+str(len(inlines))+'.sh')
+        path.write_text('#!/usr/bin/env bash\n'+script+'\n',encoding='utf-8')
+        inlines.append(path)
     plan = command_plan(root,private,inlines)
     def run_stage(label):return execute_stage(label,plan,root,private,{'_inlines':inlines})
     for tool,label,pattern in (('RUBY','ruby-version',r'^ruby ([0-9]+\.[0-9]+\.[0-9]+)'),
