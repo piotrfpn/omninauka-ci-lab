@@ -134,6 +134,10 @@ class StaticPreflightTests(unittest.TestCase):
         self.assertIn('--norc',plan['shellcheck'])
         self.assertIn('--severity=style',plan['shellcheck'])
         self.assertEqual(plan['actionlint'][1:3],['-shellcheck=','-pyflakes='])
+        self.assertEqual(plan['actionlint'][3:],[str(ROOT/name) for name in (
+            '.github/workflows/isolated-supabase-c0.yml',
+            '.github/workflows/static-controller-preflight.yml',
+            '.github/workflows/static-toolchain-discovery.yml')])
         self.assertEqual(plan['python-tests'][1:5],['-B','-m','unittest','discover'])
         self.assertEqual(plan['static-policy'][-1],'static')
         self.assertTrue(all('-n' in args for name,args in plan.items() if name.startswith('bash-syntax-')))
@@ -145,6 +149,7 @@ class StaticPreflightTests(unittest.TestCase):
         private = Path('private-synthetic')
         baseline = preflight.command_plan(ROOT,private,[])
         for label,argv in (('injected',['docker','version']),('static-policy',['python','harness/security.py','start']),
+                           ('actionlint',baseline['actionlint'][:-1]),
                            ('shellcheck',['bash','harness/verify-cleanup.sh'])):
             plan = copy.deepcopy(baseline);plan[label] = argv
             with self.subTest(label=label), patch.object(preflight.subprocess,'run') as run, \
@@ -160,6 +165,52 @@ class StaticPreflightTests(unittest.TestCase):
                     patch.object(Path,'mkdir') as mkdir, self.assertRaisesRegex(ReadinessError,'STATIC_RUNNER_UNVERIFIED'):
                 function()
             opener.assert_not_called();run.assert_not_called();read.assert_not_called();mkdir.assert_not_called()
+
+    def test_three_workflows_cover_actionlint_shellcheck_and_bash_syntax(self):
+        workflows = ('.github/workflows/isolated-supabase-c0.yml',
+                     '.github/workflows/static-controller-preflight.yml',
+                     '.github/workflows/static-toolchain-discovery.yml')
+        self.assertEqual(preflight.LINT_WORKFLOWS,workflows)
+        raw = [[step['run'] for job in yaml_load(ROOT/name)['jobs'].values()
+                for step in job['steps'] if 'run' in step] for name in workflows]
+        self.assertEqual([len(scripts) for scripts in raw],[16,3,1])
+        scripts = preflight.workflow_inlines(ROOT)
+        self.assertEqual(len(scripts),20)
+        self.assertEqual(scripts[:-1],raw[0]+raw[1])
+        paths = [Path('private-synthetic')/('inline-'+str(i)+'.sh') for i in range(len(scripts))]
+        plan = preflight.command_plan(ROOT,Path('private-synthetic'),paths)
+        self.assertEqual(plan['actionlint'][3:],[str(ROOT/name) for name in workflows])
+        self.assertEqual(plan['shellcheck'],[preflight.TOOLS['SHELLCHECK'],'--norc','--shell=bash','--severity=style',
+            *[str(ROOT/'harness'/name) for name in preflight.SCRIPTS],*[str(p) for p in paths]])
+        syntax = [argv for name,argv in plan.items() if name.startswith('bash-syntax-')]
+        self.assertEqual(len(syntax),27)
+        self.assertEqual([argv[-1] for argv in syntax],
+                         [str(ROOT/'harness'/name) for name in preflight.SCRIPTS]+[str(p) for p in paths])
+        self.assertTrue(all(argv[:4] == ['/usr/bin/bash','--noprofile','--norc','-n'] for argv in syntax))
+
+    def test_dpkg_format_annotation_is_one_instruction_in_generated_copy_only(self):
+        raw = yaml_load(ROOT/preflight.DISCOVERY_WORKFLOW)['jobs']['discovery']['steps'][0]['run']
+        lint_copy = preflight.workflow_inlines(ROOT)[-1]
+        lines = lint_copy.splitlines(keepends=True)
+        annotated = [i for i,line in enumerate(lines) if line.strip() == '# shellcheck disable=SC2016']
+        self.assertEqual(len(annotated),1)
+        index = annotated[0]
+        self.assertIn("--showformat='${binary:Package}\\t${Version}\\t${Architecture}\\t${db:Status-Status}\\n'",lines[index+1])
+        self.assertEqual(''.join(lines[:index]+lines[index+1:]),raw)
+        self.assertNotIn('disable=all',lint_copy)
+
+    def test_changed_dpkg_instruction_fails_instead_of_broadening_lint_exception(self):
+        documents = {str(ROOT/name):yaml_load(ROOT/name) for name in preflight.LINT_WORKFLOWS}
+        for replacement in ('--showformat-changed=', '--showformat='):
+            changed = copy.deepcopy(documents)
+            step = changed[str(ROOT/preflight.DISCOVERY_WORKFLOW)]['jobs']['discovery']['steps'][0]
+            if replacement == '--showformat=':
+                step['run'] += next(line for line in step['run'].splitlines(keepends=True) if '--showformat=' in line)
+            else:
+                step['run'] = step['run'].replace('--showformat=',replacement)
+            with self.subTest(replacement=replacement), patch('security.yaml_load',side_effect=lambda path:changed[str(path)]), \
+                    self.assertRaisesRegex(ReadinessError,'STATIC_DISCOVERY_LINT_INPUT_CHANGED'):
+                preflight.workflow_inlines(ROOT)
 
     def test_each_mandatory_check_fails_closed_and_filters_child_environment(self):
         private = Path('private-synthetic')

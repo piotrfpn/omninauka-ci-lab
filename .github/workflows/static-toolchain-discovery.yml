@@ -1,0 +1,136 @@
+name: Static toolchain discovery - observations only
+'on':
+  workflow_dispatch: null
+permissions: {}
+concurrency:
+  group: static-toolchain-discovery
+  cancel-in-progress: false
+jobs:
+  discovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash --noprofile --norc -euo pipefail {0}
+    env:
+      DISCOVERY_APPROVED_COMMIT_SHA: ${{ vars.DISCOVERY_APPROVED_COMMIT_SHA }}
+      EXECUTED_WORKFLOW_SHA: ${{ github.workflow_sha }}
+      REF_PROTECTED: ${{ github.ref_protected }}
+      BASH_ENV: ''
+      ENV: ''
+    steps:
+      - name: Measure approved system paths without approving observations
+        run: |
+          set -euo pipefail
+          umask 077
+          export PATH=/usr/bin:/bin LC_ALL=C.UTF-8
+          deny() { printf '%s\n' 'DISCOVERY_FAILED_NOT_APPROVED' >&2; exit 1; }
+          is_link() { [[ -L "$1" ]]; }
+          is_executable() { [[ -f "$1" && -x "$1" && ! -L "$1" ]]; }
+          safe_metadata() {
+            local metadata mode
+            metadata="$(/usr/bin/stat -c '%u:%a' -- "$1" 2>/dev/null)" || deny
+            [[ "$metadata" =~ ^0:([0-7]{3,4})$ ]] || deny
+            mode="${BASH_REMATCH[1]}"
+            (( (8#${mode} & 07022) == 0 )) || deny
+          }
+          verify_context() {
+            [[ "$GITHUB_EVENT_NAME" == workflow_dispatch ]] || deny
+            [[ "$GITHUB_REPOSITORY" == piotrfpn/omninauka-ci-lab ]] || deny
+            [[ "$GITHUB_REF" == refs/heads/main && "$REF_PROTECTED" == true ]] || deny
+            [[ "$GITHUB_WORKFLOW_REF" == piotrfpn/omninauka-ci-lab/.github/workflows/static-toolchain-discovery.yml@refs/heads/main ]] || deny
+            [[ "$DISCOVERY_APPROVED_COMMIT_SHA" =~ ^[0-9a-f]{40}$ ]] || deny
+            [[ "$GITHUB_SHA" == "$DISCOVERY_APPROVED_COMMIT_SHA" && "$EXECUTED_WORKFLOW_SHA" == "$DISCOVERY_APPROVED_COMMIT_SHA" ]] || deny
+            [[ "$RUNNER_ENVIRONMENT" == github-hosted && "$RUNNER_OS" == Linux && "$RUNNER_ARCH" == X64 ]] || deny
+            [[ "$(/usr/bin/uname -m)" == x86_64 ]] || deny
+            # shellcheck source=/dev/null
+            . /etc/os-release
+            [[ "$ID" == ubuntu && "$VERSION_ID" == 24.04 ]] || deny
+            [[ "$GITHUB_RUN_ID" =~ ^[1-9][0-9]{0,19}$ && "$GITHUB_RUN_ATTEMPT" =~ ^[1-9][0-9]{0,9}$ ]] || deny
+            image_os="${ImageOS:-UNAVAILABLE}"
+            image_version="${ImageVersion:-UNAVAILABLE}"
+            [[ "$image_os" =~ ^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$ && "$image_version" =~ ^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$ ]] || deny
+            local directory
+            for directory in / /usr /usr/bin; do safe_metadata "$directory"; done
+          }
+          measure_tool() {
+            local original="$1" tool current link resolved owner metadata package package_version architecture installed extra
+            local ownership hash_line digest after raw version line count hops=0
+            case "$original" in
+              /usr/bin/python3) tool=PYTHON ;;
+              /usr/bin/ruby) tool=RUBY ;;
+              /usr/bin/shellcheck) tool=SHELLCHECK ;;
+              *) deny ;;
+            esac
+            current="$original"
+            while is_link "$current"; do
+              (( hops < 40 )) || deny
+              owner="$(/usr/bin/stat -c '%u' -- "$current" 2>/dev/null)" || deny
+              [[ "$owner" == 0 ]] || deny
+              link="$(/usr/bin/readlink -- "$current" 2>/dev/null)" || deny
+              if [[ "$link" =~ ^[A-Za-z0-9][A-Za-z0-9._+-]{0,127}$ ]]; then
+                current="/usr/bin/$link"
+              elif [[ "$link" =~ ^/usr/bin/[A-Za-z0-9][A-Za-z0-9._+-]{0,127}$ ]]; then
+                current="$link"
+              else
+                deny
+              fi
+              hops=$((hops + 1))
+            done
+            resolved="$(/usr/bin/readlink -e -- "$original" 2>/dev/null)" || deny
+            [[ "$resolved" == "$current" && "$resolved" =~ ^/usr/bin/[A-Za-z0-9][A-Za-z0-9._+-]{0,127}$ ]] || deny
+            is_executable "$resolved" || deny
+            safe_metadata "$resolved"
+            hash_line="$(/usr/bin/sha256sum -- "$resolved" 2>/dev/null)" || deny
+            digest="${hash_line%% *}"
+            [[ "$digest" =~ ^[0-9a-f]{64}$ && "$hash_line" == "$digest  $resolved" ]] || deny
+            ownership="$(/usr/bin/dpkg-query --search "$resolved" 2>/dev/null)" || deny
+            [[ "$ownership" != *$'\n'* && "$ownership" == *": $resolved" ]] || deny
+            owner="${ownership%": $resolved"}"
+            [[ "$owner" =~ ^[a-z0-9][a-z0-9+.-]{0,127}(:[a-z0-9][a-z0-9-]{0,31})?$ ]] || deny
+            metadata="$(/usr/bin/dpkg-query --show --showformat='${binary:Package}\t${Version}\t${Architecture}\t${db:Status-Status}\n' "$owner" 2>/dev/null)" || deny
+            IFS=$'\t' read -r package package_version architecture installed extra <<< "$metadata"
+            [[ "$metadata" == "$package"$'\t'"$package_version"$'\t'"$architecture"$'\t'"$installed" && "$installed" == installed && -z "$extra" ]] || deny
+            [[ "$package" =~ ^[a-z0-9][a-z0-9+.-]{0,127}(:amd64)?$ && "${package%%:*}" == "${owner%%:*}" ]] || deny
+            [[ "$owner" != *:* || "$owner" == "${package%%:*}:amd64" ]] || deny
+            [[ "$package_version" =~ ^[0-9][A-Za-z0-9.+:~-]{0,127}$ && "$architecture" == amd64 ]] || deny
+            raw="$(/usr/bin/env -i PATH=/usr/bin:/bin LC_ALL=C.UTF-8 PYTHONDONTWRITEBYTECODE=1 "$resolved" --version 2>/dev/null)" || deny
+            (( ${#raw} > 0 && ${#raw} <= 1024 )) || deny
+            case "$tool" in
+              PYTHON)
+                [[ "$raw" =~ ^Python\ ([0-9]+\.[0-9]+\.[0-9]+)$ ]] || deny
+                version="${BASH_REMATCH[1]}"
+                ;;
+              RUBY)
+                [[ "$raw" != *$'\n'* && "$raw" =~ ^ruby\ ([0-9]+\.[0-9]+\.[0-9]+)\ [[:print:]]+$ ]] || deny
+                version="${BASH_REMATCH[1]}"
+                ;;
+              SHELLCHECK)
+                count=0
+                version=''
+                while IFS= read -r line; do
+                  if [[ "$line" == version:* ]]; then
+                    [[ "$line" =~ ^version:\ ([0-9]+\.[0-9]+\.[0-9]+)$ ]] || deny
+                    version="${BASH_REMATCH[1]}"
+                    count=$((count + 1))
+                  fi
+                done <<< "$raw"
+                (( count == 1 )) || deny
+                ;;
+            esac
+            [[ "$version" =~ ^[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}$ ]] || deny
+            after="$(/usr/bin/sha256sum -- "$resolved" 2>/dev/null)" || deny
+            [[ "$after" == "$hash_line" ]] || deny
+            printf '{"tool":"%s","original_path":"%s","resolved_path":"%s","version":"%s","sha256":"%s","package":"%s","package_version":"%s","architecture":"%s"}' \
+              "$tool" "$original" "$resolved" "$version" "$digest" "$package" "$package_version" "$architecture"
+          }
+          # Evidence is emitted only after every measurement succeeds.
+          verify_context
+          observations=()
+          for original in /usr/bin/python3 /usr/bin/ruby /usr/bin/shellcheck; do
+            observation="$(measure_tool "$original")" || deny
+            observations+=("$observation")
+          done
+          printf '{"status":"OBSERVED_NOT_APPROVED","repository":"%s","commit_sha":"%s","workflow_sha":"%s","run_id":"%s","run_attempt":"%s","image_os":"%s","image_version":"%s","observations":[%s,%s,%s]}\n' \
+            "$GITHUB_REPOSITORY" "$GITHUB_SHA" "$EXECUTED_WORKFLOW_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" \
+            "$image_os" "$image_version" "${observations[0]}" "${observations[1]}" "${observations[2]}"
